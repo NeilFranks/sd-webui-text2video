@@ -146,6 +146,16 @@ def process_modelscope(args_dict):
     state.job_count = args.batch_count
 
     for batch in pbar:
+        """
+        START: CHANGE SOMETHING PER BATCH
+        """
+        # args.cfg_scale += 3
+        # print(f"cfg scale is {args.cfg_scale}")
+
+        """
+        END: CHANGE SOMETHING PER BATCH
+        """
+
         state.job_no = batch + 1
         if state.skipped:
             state.skipped = False
@@ -206,7 +216,7 @@ def process_modelscope(args_dict):
 
             args.strength = 1
 
-        samples, _ = pipe.infer(args.prompt, args.n_prompt, args.steps, args.frames, args.seed + batch if args.seed != -1 else -1, args.cfg_scale,
+        samples, _ = pipe.infer(args.prompt, args.n_prompt, args.steps, args.frames, args.seed if args.seed != -1 else -1, args.cfg_scale,
                                 args.width, args.height, args.eta, cpu_vae, device, latents, skip_steps=skip_steps, mask=mask)
 
         if batch > 0:
