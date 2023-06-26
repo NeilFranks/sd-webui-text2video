@@ -102,6 +102,8 @@ Example: `0:(0), "max_i_f/4":(1), "3*max_i_f/4":(1), "max_i_f-1":(0)` ''')
             with gr.Row(variant='compact') as fps_out_format_row:
                 fps = gr.Slider(label="FPS", value=dv.fps, minimum=1, maximum=240, step=1)
             with gr.Row(variant='compact') as soundtrack_row:
+                subdir_name = gr.Textbox(label="Subdir name", lines=1, interactive=True, value=dv.subdir_name)
+            with gr.Row(variant='compact') as soundtrack_row:
                 add_soundtrack = gr.Radio(['None', 'File', 'Init Video'], label="Add soundtrack", value=dv.add_soundtrack)
                 soundtrack_path = gr.Textbox(label="Soundtrack path", lines=1, interactive=True, value=dv.soundtrack_path)
 
@@ -117,7 +119,7 @@ Example: `0:(0), "max_i_f/4":(1), "3*max_i_f/4":(1), "max_i_f-1":(0)` ''')
 
     return locals()
 
-t2v_video_args_names = str('skip_video_creation, ffmpeg_location, ffmpeg_crf, ffmpeg_preset, fps, add_soundtrack, soundtrack_path').replace("\n", "").replace("\r", "").replace(" ", "").split(',')
+t2v_video_args_names = str('skip_video_creation, ffmpeg_location, ffmpeg_crf, ffmpeg_preset, fps, add_soundtrack, soundtrack_path, subdir_name').replace("\n", "").replace("\r", "").replace(" ", "").split(',')
 
 common_values_names = str('''prompt, n_prompt, steps, frames, seed, cfg_scale, width, height, eta, batch_count''').replace("\n", "").replace("\r", "").replace(" ", "").split(',')
 
@@ -206,6 +208,7 @@ def T2VOutputArgs():
     ffmpeg_preset = 'slow'
     add_soundtrack = 'None'  # ["File","Init Video"]
     soundtrack_path = "https://deforum.github.io/a1/A1.mp3"
+    subdir_name = ''
     # End-Run upscaling
     r_upscale_video = False
     r_upscale_factor = 'x2'  # ['2x', 'x3', 'x4']
@@ -223,7 +226,12 @@ def T2VOutputArgs():
     frame_interpolation_keep_imgs = False
     return locals()
 
-def get_outdir():
-    outdir = os.path.join(opts.outdir_img2img_samples, 'text2video')
-    outdir = os.path.join(os.getcwd(), outdir)
-    return outdir
+def get_outdir(subdir_name=None):
+    if (subdir_name):
+        outdir = os.path.join(opts.outdir_img2img_samples, 'text2video', subdir_name)
+        outdir = os.path.join(os.getcwd(), outdir)
+        return outdir
+    else:
+        outdir = os.path.join(opts.outdir_img2img_samples, 'text2video')
+        outdir = os.path.join(os.getcwd(), outdir)
+        return outdir

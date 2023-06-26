@@ -21,7 +21,7 @@ if current_directory not in sys.path:
 import gradio as gr
 from modules import script_callbacks, shared
 from modules.shared import cmd_opts, opts
-from t2v_helpers.render import run
+from t2v_helpers.render import run, run_make_sequence
 import t2v_helpers.args as args
 from t2v_helpers.args import setup_text2video_settings_dictionary
 from webui import wrap_gradio_gpu_call
@@ -40,6 +40,20 @@ def process(*args):
     run(*args)
     return f'Video ready'
 
+def make_sequence(*args):
+    # weird PATH stuff
+    for basedir in basedirs:
+        sys.path.extend([
+            basedir + '/scripts',
+            basedir + '/extensions/sd-webui-text2video/scripts',
+            basedir + '/extensions/sd-webui-modelscope-text2video/scripts',
+        ])
+    if current_directory not in sys.path:
+        sys.path.append(current_directory)
+
+    run_make_sequence(*args)
+    return f'Video ready'
+
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as deforum_interface:
         components = {}
@@ -47,10 +61,14 @@ def on_ui_tabs():
             with gr.Column(scale=1, variant='panel'):
                 components = setup_text2video_settings_dictionary()
             with gr.Column(scale=1, variant='compact'):
+                """
+                BUTTONS
+                """
                 with gr.Row(elem_id=f"text2vid_generate_box", variant='compact', elem_classes="generate-box"):
                     interrupt = gr.Button('Interrupt', elem_id=f"text2vid_interrupt", elem_classes="generate-box-interrupt")
                     skip = gr.Button('Skip', elem_id=f"text2vid_skip", elem_classes="generate-box-skip")
                     run_button = gr.Button('Generate', elem_id=f"text2vid_generate", variant='primary')
+                    sequence_button = gr.Button('Sequence', elem_id=f"text2vid_sequence", variant='primary')
 
                     skip.click(
                         fn=lambda: shared.state.skip(),
@@ -90,6 +108,15 @@ def on_ui_tabs():
             run_button.click(
                 # , extra_outputs=[None, '', '']),
                 fn=wrap_gradio_gpu_call(process),
+                _js="submit_txt2vid",
+                inputs=[dummy_component1, dummy_component2] + [components[name] for name in args.get_component_names()],
+                outputs=[
+                    dummy_component1, dummy_component2,
+                ],
+            )
+            sequence_button.click(
+                # , extra_outputs=[None, '', '']),
+                fn=wrap_gradio_gpu_call(make_sequence),
                 _js="submit_txt2vid",
                 inputs=[dummy_component1, dummy_component2] + [components[name] for name in args.get_component_names()],
                 outputs=[
