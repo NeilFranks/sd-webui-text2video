@@ -17,7 +17,15 @@ def run(*args):
     vids_pack = [dataurl]
     component_names = t2v_helpers_args.get_component_names()
     # TODO: change to i+2 when we will add the progress bar
-    args_dict = {component_names[i]: args[i+2] for i in range(0, len(component_names))}
+
+    # print("\n\n\ncomponents")
+    # print(len(component_names))
+    # print(component_names)
+    # print("\n\n\nargs")
+    # print(len(args))
+    # print(args)
+
+    args_dict = {component_names[i]: args[i] for i in range(0, len(component_names))}
     model_type = args_dict['model_type']
     t2v_helpers_args.i1_store_t2v = f'<p style=\"font-weight:bold;margin-bottom:0em\">text2video extension for auto1111 — version 1.2b </p><video controls loop><source src="{dataurl}" type="video/mp4"></video>'
     keep_pipe_in_vram = opts.data.get("modelscope_deforum_keep_model_in_vram") if opts.data is not None and opts.data.get("modelscope_deforum_keep_model_in_vram") is not None else 'None'
@@ -44,8 +52,18 @@ def run_make_sequence(*args):
     dataurl = get_error()
     vids_pack = [dataurl]
     component_names = t2v_helpers_args.get_component_names()
-    # TODO: change to i+2 when we will add the progress bar
-    args_dict = {component_names[i]: args[i+2] for i in range(0, len(component_names))}
+    # # TODO: change to i+2 when we will add the progress bar
+    # args_dict = {component_names[i]: args[i+2] for i in range(0, len(component_names))}
+
+    # print("\n\n\ncomponents")
+    # print(len(component_names))
+    # print(component_names)
+    # print("\n\n\nargs")
+    # print(len(args))
+    # print(args)
+
+    args_dict = {component_names[i]: args[i] for i in range(0, len(component_names))}
+
     model_type = args_dict['model_type']
     t2v_helpers_args.i1_store_t2v = f'<p style=\"font-weight:bold;margin-bottom:0em\">text2video extension for auto1111 — version 1.2b </p><video controls loop><source src="{dataurl}" type="video/mp4"></video>'
     keep_pipe_in_vram = opts.data.get("modelscope_deforum_keep_model_in_vram") if opts.data is not None and opts.data.get("modelscope_deforum_keep_model_in_vram") is not None else 'None'

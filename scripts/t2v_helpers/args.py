@@ -208,7 +208,7 @@ def T2VOutputArgs():
     ffmpeg_preset = 'slow'
     add_soundtrack = 'None'  # ["File","Init Video"]
     soundtrack_path = "https://deforum.github.io/a1/A1.mp3"
-    subdir_name = ''
+    subdir_name = 'default'
     # End-Run upscaling
     r_upscale_video = False
     r_upscale_factor = 'x2'  # ['2x', 'x3', 'x4']
@@ -226,12 +226,14 @@ def T2VOutputArgs():
     frame_interpolation_keep_imgs = False
     return locals()
 
-def get_outdir(subdir_name=None):
+def get_outdir(subdir_name="default"):
+    # root = opts.outdir_img2img_samples
+    root = "D:\calliope"
     if (subdir_name):
-        outdir = os.path.join(opts.outdir_img2img_samples, 'text2video', subdir_name)
+        outdir = os.path.join(root, 'text2video', subdir_name)
         outdir = os.path.join(os.getcwd(), outdir)
         return outdir
     else:
-        outdir = os.path.join(opts.outdir_img2img_samples, 'text2video')
+        outdir = os.path.join(root, 'text2video')
         outdir = os.path.join(os.getcwd(), outdir)
         return outdir
